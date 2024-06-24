@@ -47,14 +47,14 @@
       }
 
       .credit {
-        position: absolute;
+        position: fixed;
         bottom: 10px;
         right: 10px;
         font-family: sans-serif;
         text-transform: uppercase;
         color: #888;
         font-size: 11px;
-        transition: transform .2s ease;
+        transition: transform 0.2s ease;
       }
 
       .credit a {
@@ -63,7 +63,7 @@
       }
 
       .credit:hover {
-        transform: scale(1.1) rotate(-2deg) translate(-2px,-2px);
+        transform: scale(1.1) rotate(-2deg) translate(-2px, -2px);
       }
 
       button {
@@ -88,17 +88,23 @@
   </head>
   <body>
     <div class="controls">
+      <button onclick="toggleFullScreen()">Fullscreen</button>
+      <button onclick="toggleFlip('horizontal')">↩️ Left/Right</button>
+      <button onclick="toggleFlip('vertical')">↩️ Up/Down</button>
       <button onclick="toggleScroll()">Start/Stop</button>
-      <button onclick="toggleFlip('horizontal')">Flip Left/Right</button>
-      <button onclick="toggleFlip('vertical')">Flip Up/Down</button>
-      <button onclick="adjustFontSize(5)">A+</button>
-      <button onclick="adjustFontSize(-5)">A-</button>
+      <label>Speed:</label>
+      <button onclick="adjustSpeed(5)">+</button>
+      <button onclick="adjustSpeed(-5)">-</button>
+      <label>Font:</label>
+      <button onclick="adjustFontSize(5)">+</button>
+      <button onclick="adjustFontSize(-5)">-</button>
       <label>Margins:</label>
       <button onclick="adjustMargins(5)">+</button>
       <button onclick="adjustMargins(-5)">-</button>
-      <button onclick="toggleFullScreen()">Fullscreen</button>
     </div>
-    <div class="credit"><a href="https://lovrosuhadolnik.com">Made with ❤️ by Lovro</a></div>
+    <div class="credit">
+      <a href="https://lovrosuhadolnik.com">Made with ❤️ by Lovro</a>
+    </div>
     <div id="prompter" contenteditable>hey! You can enter your text here!</div>
 
     <script>
@@ -106,12 +112,13 @@
       let scrollSpeed = 1;
       let scrollInterval;
       const prompter = document.getElementById("prompter");
+      const scroller = document.getElementsByTagName("html")[0];
 
       document.addEventListener("keydown", (event) => {
         if (event.key === "ArrowUp") {
-          prompter.scrollBy(0, -10);
+          scroller.scrollBy(0, -10);
         } else if (event.key === "ArrowDown") {
-          prompter.scrollBy(0, 10);
+          scroller.scrollBy(0, 10);
         }
       });
 
@@ -119,11 +126,15 @@
         scrolling = !scrolling;
         if (scrolling) {
           scrollInterval = setInterval(() => {
-            prompter.scrollBy(0, scrollSpeed);
+            scroller.scrollBy(0, scrollSpeed);
           }, 30);
         } else {
           clearInterval(scrollInterval);
         }
+      }
+
+      function adjustSpeed(amount) {
+        scrollSpeed += amount;
       }
 
       function toggleFlip(direction) {
